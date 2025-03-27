@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<style type="text/css">
+
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+</head>
+<body>
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>富邦VS中信啦啦隊終極PK</title>
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .main-title {
+            color: #e74c3c;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin: 20px 0 40px;
+            font-size: 2.5em;
+        }
+
+        #game {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .countdown {
+            font-size: 1.5em;
+            color: #e74c3c;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+
+        .countdown-bar {
+            width: 100%;
+            height: 5px;
+            background: #eee;
+            margin: 10px 0;
+            border-radius: 3px;
+        }
+
+        .countdown-progress {
+            height: 100%;
+            background: #2ecc71;
+            width: 100%;
+            border-radius: 3px;
+            transition: width 1s linear;
+        }
+
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .vs-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .vs-button {
+            padding: 20px 40px;
+            font-size: 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 15px;
+            color: white;
+            transition: all 0.3s;
+            min-width: 250px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .vs-button[data-team="富邦"] { 
+            background: linear-gradient(45deg, #004aad, #0066cc);
+            border: 2px solid #00387a;
+        }
+
+        .vs-button[data-team="中信"] { 
+            background: linear-gradient(45deg, #FFD100, #FFB300);
+            border: 2px solid #e6a700;
+        }
+
+        .select-all-btn {
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+            border: 2px solid #6c3483;
+            margin-top: 20px;
+        }
+
+        #eliminated-list {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px auto;
+            max-width: 400px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .eliminated-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 15px;
+            margin: 8px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+            animation: fadeIn 0.5s;
+        }
+
+        .elimination-order {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #e74c3c;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .team-tag {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .team-富邦 { background: #004aad; color: white; }
+        .team-中信 { background: #FFD100; color: #2d2d2d; }
+
+        .modal-mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            max-width: 400px;
+        }
+
+        .modal-title {
+            color: #e74c3c;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .modal-button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .modal-button.restart {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .hesitate-names {
+            color: #e74c3c;
+            font-size: 1.2em;
+            margin: 15px 0;
+            padding: 10px;
+            background: #f8d7da;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .champion-box {
+            position: relative;
+            padding: 40px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            margin: 30px auto;
+            animation: championAppear 1s;
+        }
+
+        @keyframes championAppear {
+            0% { transform: scale(0); }
+            80% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <h1 class="main-title">🏆 富邦VS中信啦啦隊終極PK 🏆</h1>
+    <div id="game"></div>
+    <div id="eliminated-list">
+        <h3 style="color:#666;margin-bottom:15px;">🚫 淘汰順序列表</h3>
+        <div id="eliminated-members"></div>
+    </div>
+
+    <div class="modal-mask" id="modal">
+        <div class="modal-content">
+            <div class="modal-title"> 你這個渣男到底愛誰！？</div>
+            <p>都已經超過50回合了還選不出來！</p>
+            <div class="hesitate-names" id="hesitateNames"></div>
+            <div class="modal-buttons">
+                <button class="modal-button restart" onclick="location.reload()">重新開始</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const players = [
+            {name: "慈妹", team: "富邦"}, {name: "丹丹", team: "富邦"}, 
+            {name: "秀秀子", team: "富邦"}, {name: "禾羽", team: "富邦"},  
+            {name: "KAPO", team: "富邦"}, {name: "潔潔", team: "富邦"},    
+            {name: "奶昔", team: "富邦"}, {name: "栗子", team: "富邦"},    
+            {name: "Jessy", team: "富邦"}, {name: "南珉貞", team: "富邦"},
+            {name: "李雅英", team: "富邦"}, {name: "李珠恩", team: "富邦"},
+            {name: "蓁蓁", team: "富邦"}, {name: "安娜", team: "富邦"},
+
+            {name: "峮峮", team: "中信"}, {name: "短今", team: "中信"}, 
+            {name: "少鹽", team: "中信"}, {name: "曼容", team: "中信"},   
+            {name: "衣宸", team: "中信"}, {name: "李丹妃", team: "中信"},  
+            {name: "貴貴", team: "中信"}, {name: "Peggy", team: "中信"},
+            {name: "波波", team: "中信"}, {name: "晴兒", team: "中信"},
+            {name: "希希", team: "中信"}, {name: "林可", team: "中信"},
+            {name: "小迪", team: "中信"}, {name: "邊荷律", team: "中信"}
+        ];
+
+        let currentRound = [...players];
+        let eliminationRecords = [];
+        let roundNumber = 1;
+        let countdownTimer;
+        let currentPair = [];
+        let lastPair = [];
+        const TIME_LIMIT = 15;
+        const winStats = {};
+
+        players.forEach(p => {
+            winStats[p.name] = { wins: 0, total: 0, team: p.team };
+        });
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function startGame() {
+            if(roundNumber > 50) {
+                showModal();
+                return;
+            }
+
+            if (currentRound.length === 1) {
+                showChampion();
+                return;
+            }
+
+            if(countdownTimer) clearInterval(countdownTimer);
+            
+            let shuffled, newPair;
+            let retryCount = 0;
+            do {
+                shuffled = shuffleArray([...currentRound]);
+                newPair = shuffled.slice(0, 2);
+                retryCount++;
+                if(retryCount > 10) break;
+            } while (
+                (newPair[0]?.name === lastPair[0]?.name && 
+                newPair[1]?.name === lastPair[1]?.name) ||
+                (newPair[0]?.name === lastPair[1]?.name && 
+                newPair[1]?.name === lastPair[0]?.name)
+            );
+            lastPair = [...newPair];
+            currentPair = newPair;
+
+            const [p1, p2] = currentPair;
+            let timeLeft = TIME_LIMIT;
+
+            document.getElementById('game').innerHTML = `
+                <div style="margin: 30px 0">
+                    <h2 style="color: #2c3e50;font-size:1.8em">第 ${roundNumber} 回合</h2>
+                    <div style="color:#7f8c8d; margin:10px 0; font-size:1.2em">
+                        🚩 剩餘選手：${currentRound.length} 人
+                        <span style="margin:0 15px">|</span>
+                        🟦 富邦：${currentRound.filter(p=>p.team==='富邦').length} 人
+                        <span style="margin:0 15px">|</span>
+                        🟨 中信：${currentRound.filter(p=>p.team==='中信').length} 人
+                    </div>
+                    <div class="countdown">
+                        <div>剩餘選擇時間：<span id="time">${timeLeft}</span>秒</div>
+                        <div class="countdown-bar">
+                            <div id="countdown-progress" class="countdown-progress"></div>
+                        </div>
+                    </div>
+                    <div class="buttons-container">
+                        <div class="vs-buttons">
+                            <button class="vs-button" data-team="${p1.team}" onclick="clearTimer();chooseWinner('${p1.name}')">
+                                ${p1.name}（${p1.team}）
+                            </button>
+                            <div style="align-self: center;font-size: 24px;color: #e74c3c">VS</div>
+                            <button class="vs-button" data-team="${p2.team}" onclick="clearTimer();chooseWinner('${p2.name}')">
+                                ${p2.name}（${p2.team}）
+                            </button>
+                        </div>
+                        <button class="vs-button select-all-btn" onclick="handleSelectAll()">
+                            我要全部！
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            const progressBar = document.getElementById('countdown-progress');
+            const timeDisplay = document.getElementById('time');
+            let isTimeoutHandled = false;
+            
+            countdownTimer = setInterval(() => {
+                timeLeft--;
+                timeDisplay.textContent = timeLeft;
+                progressBar.style.width = `${(timeLeft/TIME_LIMIT)*100}%`;
+
+                if(timeLeft <= 0 && !isTimeoutHandled) {
+                    isTimeoutHandled = true;
+                    clearInterval(countdownTimer);
+                    handleSelectAll();
+                }
+            }, 1000);
+        }
+
+        function clearTimer() {
+            clearInterval(countdownTimer);
+            document.getElementById('countdown-progress').style.width = '100%';
+        }
+
+        function handleSelectAll() {
+            roundNumber++;
+            const newRound = [...currentRound];
+            currentPair.forEach(p => {
+                if(!newRound.some(exist => exist.name === p.name)) {
+                    newRound.push(p);
+                }
+            });
+            currentRound = newRound;
+            startGame();
+        }
+
+        function chooseWinner(winnerName) {
+            currentPair.forEach(p => {
+                winStats[p.name].total++;
+                if(p.name === winnerName) winStats[p.name].wins++;
+            });
+
+            const loser = currentPair.find(p => p.name !== winnerName);
+            eliminationRecords.push({
+                order: eliminationRecords.length + 1,
+                loser: loser,
+                eliminatedBy: currentPair.find(p => p.name === winnerName),
+                round: roundNumber
+            });
+
+            currentRound = currentRound.filter(p => p.name !== loser.name);
+            roundNumber++;
+            updateEliminatedList();
+            startGame();
+        }
+
+        function updateEliminatedList() {
+            document.getElementById('eliminated-members').innerHTML = eliminationRecords.map(record => `
+                <div class="eliminated-item">
+                    <div style="display:flex;align-items:center;">
+                        <div class="elimination-order">${record.order}</div>
+                        <span>${record.loser.name}</span>
+                        <span class="team-tag team-${record.loser.team}">${record.loser.team}</span>
+                    </div>
+                    <div class="eliminated-details">
+                        <div>第 ${record.round} 回合</div>
+                        <div>敗給：${record.eliminatedBy.name}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showModal() {
+            clearInterval(countdownTimer);
+            document.getElementById('modal').style.display = 'flex';
+            currentRound = [];
+            
+            const namesDiv = document.getElementById('hesitateNames');
+            if(currentPair.length === 2) {
+                namesDiv.innerHTML = `你在這兩位之間猶豫太久：<br>${currentPair[0].name} vs ${currentPair[1].name}`;
+            } else {
+                namesDiv.innerHTML = "你連最後的選擇都在猶豫！";
+            }
+        }
+
+        function showChampion() {
+            const stats = Object.entries(winStats)
+                .map(([name, data]) => ({
+                    name,
+                    team: data.team,
+                    rate: data.total > 0 ? (data.wins / data.total * 100).toFixed(1) : 0,
+                    total: data.total
+                }))
+                .sort((a, b) => b.rate - a.rate);
+
+            document.getElementById('game').innerHTML = `
+                <div class="champion-box">
+                    <div style="font-size: 2em;color: #e74c3c">🎉 總冠軍 🎉</div>
+                    <div style="font-size: 3em;margin: 20px;color: #2ecc71">
+                        ${currentRound[0].name}（${currentRound[0].team}）
+                    </div>
+                    <table class="stats-table">
+                        <thead>
+                            <tr>
+                                <th>選手</th>
+                                <th>隊伍</th>
+                                <th>勝率</th>
+                                <th>參賽次數</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${stats.map(p => `
+                                <tr>
+                                    <td>${p.name}</td>
+                                    <td><span class="team-tag team-${p.team}">${p.team}</span></td>
+                                    <td>${p.rate}%</td>
+                                    <td>${p.total}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    <button class="vs-button" 
+                            style="background: #e67e22;border-color:#d35400"
+                            onclick="location.reload()">
+                        再玩一次
+                    </button>
+                </div>
+            `;
+        }
+
+        startGame();
+    </script>
+</body>
+</html>
+<script>
+
+</script>
+</body>
+</html>
