@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>韓籍成員排名遊戲</title>
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #e74c3c;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        .game-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .selection-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .member-btn {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s;
+        }
+        .member-btn:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+        .member-btn.selected {
+            background-color: #7f8c8d;
+            cursor: default;
+        }
+        .ranking-area {
+            min-height: 100px;
+            border: 2px solid #7f8c8d;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+        }
+        .ranked-item {
+            background-color: #2ecc71;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        .ranked-item:hover {
+            background-color: #27ae60;
+        }
+        .rank-number {
+            background-color: #f39c12;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-right: 10px;
+            min-width: 25px;
+            display: inline-block;
+            text-align: center;
+        }
+        .remove-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        .remove-btn:hover {
+            background-color: #c0392b;
+        }
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 10px;
+            transition: all 0.2s;
+        }
+        button:hover {
+            background-color: #c0392b;
+            transform: scale(1.05);
+        }
+        .result {
+            margin-top: 20px;
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .final-rank-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #bdc3c7;
+        }
+        .instructions {
+            color: #7f8c8d;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .empty-message {
+            color: #7f8c8d;
+            text-align: center;
+            padding: 20px;
+        }
+        .flag-icon {
+            display: inline-block;
+            width: 20px;
+            height: 15px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480"><path fill="#fff" d="M0 0h640v480H0z"/><path fill="#C60C30" d="M233 90.8h174v44.6H233zm0 89h174v44.6H233zM90.5 180.3h44.6v44.6H90.5zm0-89.1h44.6v44.6H90.5z"/><path fill="#C60C30" d="M233 180.3h174v44.6H233zm0 89.1h174v44.6H233zM90.5 269.6h44.6v44.6H90.5zm0-89.1h44.6v44.6H90.5zm466.4-79.4h44.6v44.6h-44.6zm0 89.1h44.6v44.6h-44.6zm0 89.1h44.6v44.6h-44.6z"/><path fill="#003478" d="M419.6 90.8h44.6v44.6h-44.6zm0 178.2h44.6V313h-44.6z"/><circle cx="354.9" cy="180.3" r="44.6" fill="#C60C30"/><path fill="#003478" d="M419.6 180.3h44.6v44.6h-44.6z"/></svg>');
+            background-size: contain;
+            background-repeat: no-repeat;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>韓籍成員排名遊戲</h1>
+        <div class="subtitle">為你喜愛的韓籍啦啦隊成員排名</div>
+        <p class="instructions">點選下方成員加入排名，點選已排名成員可移除，拖曳已排名成員可調整順序</p>
+        
+        <div class="selection-area" id="selectionArea">
+            <!-- 成員列表將由JavaScript動態生成 -->
+        </div>
+        
+        <h2>我的排名 <span id="rankCount">(0/19)</span></h2>
+        <div class="ranking-area" id="rankingArea">
+            <p class="empty-message">請從上方點選成員加入排名</p>
+        </div>
+        
+        <div class="controls">
+            <button id="resetBtn">重新開始</button>
+        </div>
+        
+        <div class="result" id="result">
+            <h2>即時排名結果 <span class="flag-icon"></span></h2>
+            <div id="finalRanking">
+                <p class="empty-message">尚未有任何排名</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 成員名單
+        const members = [
+            "安芝儇", "邊荷律", "河智媛", "趙娟週", "金渡娥", 
+            "李雅英", "李多慧", "李丹妃", "李晧禎", "南珉貞", 
+            "朴善珠", "朴旻曙", "安惠志", "文慧真", "廉世彬", 
+            "李珠珢", "權喜原", "禹洙漢", "金娜妍"
+        ];
+        
+        // 初始化遊戲
+        function initGame() {
+            const selectionArea = document.getElementById('selectionArea');
+            const rankingArea = document.getElementById('rankingArea');
+            const rankCount = document.getElementById('rankCount');
+            const finalRanking = document.getElementById('finalRanking');
+            
+            // 清空區域
+            selectionArea.innerHTML = '';
+            rankingArea.innerHTML = '<p class="empty-message">請從上方點選成員加入排名</p>';
+            finalRanking.innerHTML = '<p class="empty-message">尚未有任何排名</p>';
+            
+            // 打亂成員順序
+            const shuffledMembers = [...members].sort(() => Math.random() - 0.5);
+            
+            // 創建成員選擇按鈕
+            shuffledMembers.forEach(member => {
+                const memberBtn = document.createElement('button');
+                memberBtn.className = 'member-btn';
+                memberBtn.innerHTML = `<span class="flag-icon"></span>${member}`;
+                
+                memberBtn.addEventListener('click', () => {
+                    // 檢查是否已經在排名中
+                    const existingItems = rankingArea.querySelectorAll('.ranked-item');
+                    let alreadyRanked = false;
+                    
+                    existingItems.forEach(item => {
+                        if (item.dataset.member === member) {
+                            alreadyRanked = true;
+                        }
+                    });
+                    
+                    if (!alreadyRanked) {
+                        addToRanking(member);
+                        memberBtn.classList.add('selected');
+                        
+                        // 更新計數
+                        updateRankCount();
+                        
+                        // 更新即時結果
+                        updateLiveResult();
+                        
+                        // 移除提示文字
+                        const emptyMessage = rankingArea.querySelector('.empty-message');
+                        if (emptyMessage) {
+                            emptyMessage.remove();
+                        }
+                    }
+                });
+                
+                selectionArea.appendChild(memberBtn);
+            });
+            
+            // 添加到排名區域的函數
+            function addToRanking(member) {
+                const rankedItem = document.createElement('div');
+                rankedItem.className = 'ranked-item';
+                rankedItem.dataset.member = member;
+                rankedItem.draggable = true;
+                
+                const rankNumber = document.createElement('span');
+                rankNumber.className = 'rank-number';
+                rankedItem.appendChild(rankNumber);
+                
+                const memberName = document.createElement('span');
+                memberName.innerHTML = `<span class="flag-icon"></span>${member}`;
+                rankedItem.appendChild(memberName);
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'remove-btn';
+                removeBtn.innerHTML = '×';
+                removeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    removeFromRanking(rankedItem, member);
+                });
+                rankedItem.appendChild(removeBtn);
+                
+                // 拖曳排序功能
+                rankedItem.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', member);
+                    setTimeout(() => {
+                        rankedItem.style.opacity = '0.4';
+                    }, 0);
+                });
+                
+                rankedItem.addEventListener('dragend', () => {
+                    rankedItem.style.opacity = '1';
+                    updateRankNumbers();
+                    updateLiveResult();
+                });
+                
+                rankedItem.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    const draggingItem = document.querySelector('.ranked-item[style*="opacity: 0.4"]');
+                    if (draggingItem && draggingItem !== rankedItem) {
+                        const rect = rankedItem.getBoundingClientRect();
+                        const next = (e.clientY - rect.top) / (rect.bottom - rect.top) > 0.5;
+                        rankingArea.insertBefore(draggingItem, next ? rankedItem.nextSibling : rankedItem);
+                    }
+                });
+                
+                rankingArea.appendChild(rankedItem);
+                updateRankNumbers();
+            }
+            
+            // 從排名中移除的函數
+            function removeFromRanking(item, member) {
+                item.remove();
+                
+                // 更新選擇按鈕狀態
+                document.querySelectorAll('.member-btn').forEach(btn => {
+                    if (btn.textContent.includes(member)) {
+                        btn.classList.remove('selected');
+                    }
+                });
+                
+                // 更新計數
+                updateRankCount();
+                
+                // 更新即時結果
+                updateLiveResult();
+                
+                // 如果沒有排名成員，顯示提示信息
+                if (rankingArea.querySelectorAll('.ranked-item').length === 0) {
+                    rankingArea.innerHTML = '<p class="empty-message">請從上方點選成員加入排名</p>';
+                    finalRanking.innerHTML = '<p class="empty-message">尚未有任何排名</p>';
+                }
+                
+                updateRankNumbers();
+            }
+            
+            // 更新排名數字
+            function updateRankNumbers() {
+                const rankedItems = rankingArea.querySelectorAll('.ranked-item');
+                rankedItems.forEach((item, index) => {
+                    item.querySelector('.rank-number').textContent = index + 1;
+                });
+            }
+            
+            // 更新排名計數
+            function updateRankCount() {
+                const count = rankingArea.querySelectorAll('.ranked-item').length;
+                rankCount.textContent = `(${count}/19)`;
+            }
+            
+            // 更新即時結果
+            function updateLiveResult() {
+                const rankedItems = rankingArea.querySelectorAll('.ranked-item');
+                const finalRanking = document.getElementById('finalRanking');
+                
+                if (rankedItems.length === 0) {
+                    finalRanking.innerHTML = '<p class="empty-message">尚未有任何排名</p>';
+                    return;
+                }
+                
+                finalRanking.innerHTML = '';
+                rankedItems.forEach((item, index) => {
+                    const rankItem = document.createElement('div');
+                    rankItem.className = 'final-rank-item';
+                    rankItem.innerHTML = `<span class="rank-number">${index + 1}</span> <span class="flag-icon"></span>${item.dataset.member}`;
+                    finalRanking.appendChild(rankItem);
+                });
+            }
+        }
+        
+        // 重置遊戲
+        document.getElementById('resetBtn').addEventListener('click', initGame);
+        
+        // 初始化遊戲
+        window.onload = initGame;
+    </script>
+</body>
+</html>
