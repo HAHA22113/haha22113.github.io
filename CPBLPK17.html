@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>誰是富邦公主</title>
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff5f5;
+            text-align: center;
+        }
+        h1 {
+            color: #e74c3c;
+            margin-bottom: 30px;
+        }
+        .game-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .players {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .player {
+            cursor: pointer;
+            padding: 20px;
+            border-radius: 10px;
+            width: 40%;
+            background-color: #f8f9fa;
+            transition: all 0.3s;
+        }
+        .player:hover {
+            transform: scale(1.05);
+            background-color: #f8d7da;
+        }
+        .player-name {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .vs {
+            display: flex;
+            align-items: center;
+            font-size: 20px;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .round-info {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #666;
+        }
+        .timer-container {
+            position: relative;
+            height: 10px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .timer-bar {
+            height: 100%;
+            background-color: #e74c3c;
+            width: 100%;
+            transition: width 0.1s linear;
+        }
+        .timer-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12px;
+            color: white;
+            font-weight: bold;
+        }
+        .progress-container {
+            width: 100%;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .progress-bar {
+            height: 20px;
+            background-color: #e74c3c;
+            border-radius: 5px;
+            width: 100%;
+            transition: width 0.3s;
+        }
+        .progress-text {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+        button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #c0392b;
+        }
+        .rankings {
+            margin-top: 20px;
+            text-align: left;
+            display: none;
+        }
+        .rank-item {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .rank-number {
+            font-weight: bold;
+            color: #e74c3c;
+            min-width: 60px;
+            text-align: center;
+        }
+        .rank-details {
+            flex-grow: 1;
+            text-align: left;
+            padding-left: 10px;
+        }
+        .win-rate {
+            font-size: 14px;
+            color: #666;
+        }
+        .crown-icon {
+            color: gold;
+            margin-right: 5px;
+        }
+        .final-stats {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>誰是富邦公主 👑</h1>
+    
+    <div class="game-container">
+        <div id="play-area">
+            <div class="round-info" id="round-info">第1回合/共50回合</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+                <div class="progress-text" id="progress-text">0%</div>
+            </div>
+            <div class="timer-container">
+                <div class="timer-bar" id="timer-bar"></div>
+                <div class="timer-text" id="timer-text">5.0秒</div>
+            </div>
+            <div class="players">
+                <div class="player" id="player1" onclick="selectPlayer(1)">
+                    <div class="player-name" id="name1">選手1</div>
+                </div>
+                <div class="vs">VS</div>
+                <div class="player" id="player2" onclick="selectPlayer(2)">
+                    <div class="player-name" id="name2">選手2</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="rankings" id="rankings">
+            <h3>富邦公主排名 <span class="crown-icon">👑</span></h3>
+            <div id="rank-list"></div>
+            <div class="final-stats" id="final-stats"></div>
+        </div>
+        
+        <button onclick="resetGame()" id="reset-btn" style="display:none;">再玩一次</button>
+    </div>
+    
+    <script>
+        // 選手名單
+        const players = [
+            "慈妹", "丹丹", "秀秀子", "禾羽", 
+            "KAPO", "潔潔", "奶昔", "栗子", 
+            "Jessy", "南珉貞", "李雅英", "李珠恩",
+            "潔米", "安娜", "寶兒", "Kesha",
+            "Tiffany", "卡洛琳", "大頭", "雅惟",
+            "維心", "沁沁", "檸檬"
+        ];
+        
+        let currentRound = 1;
+        const totalRounds = 50;
+        let gameEnded = false;
+        let playerStats = {};
+        let timer;
+        let timeLeft = 5;
+        let drawCount = 0;
+        let lastTimestamp;
+        
+        // 初始化遊戲
+        function initGame() {
+            currentRound = 1;
+            gameEnded = false;
+            playerStats = {};
+            drawCount = 0;
+            
+            // 初始化選手統計數據
+            players.forEach(player => {
+                playerStats[player] = {
+                    wins: 0,
+                    appearances: 0,
+                    winRate: 0
+                };
+            });
+            
+            document.getElementById('play-area').style.display = 'block';
+            document.getElementById('rankings').style.display = 'none';
+            document.getElementById('reset-btn').style.display = 'none';
+            
+            updateRoundInfo();
+            startTimer();
+            nextMatch();
+        }
+        
+        // 更新回合資訊
+        function updateRoundInfo() {
+            const progress = (currentRound / totalRounds) * 100;
+            document.getElementById('round-info').textContent = `第${currentRound}回合/共${totalRounds}回合`;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            document.getElementById('progress-text').textContent = `${Math.round(progress)}%`;
+        }
+        
+        // 開始倒數計時
+        function startTimer() {
+            clearInterval(timer);
+            timeLeft = 5;
+            updateTimerDisplay();
+            lastTimestamp = performance.now();
+            
+            timer = setInterval(() => {
+                const now = performance.now();
+                const delta = (now - lastTimestamp) / 1000;
+                lastTimestamp = now;
+                
+                timeLeft -= delta;
+                
+                if (timeLeft <= 0) {
+                    timeLeft = 0;
+                    clearInterval(timer);
+                    handleTimeout();
+                }
+                
+                updateTimerDisplay();
+            }, 16); // 約60fps
+        }
+        
+        // 更新計時器顯示
+        function updateTimerDisplay() {
+            document.getElementById('timer-bar').style.width = `${(timeLeft / 5) * 100}%`;
+            document.getElementById('timer-text').textContent = `${timeLeft.toFixed(1)}秒`;
+            
+            // 根據剩餘時間改變顏色
+            if (timeLeft < 1) {
+                document.getElementById('timer-bar').style.backgroundColor = '#ff0000';
+            } else if (timeLeft < 2) {
+                document.getElementById('timer-bar').style.backgroundColor = '#ff6b6b';
+            } else {
+                document.getElementById('timer-bar').style.backgroundColor = '#e74c3c';
+            }
+        }
+        
+        // 處理超時
+        function handleTimeout() {
+            drawCount++;
+            
+            // 更新兩位選手的出場次數但不增加勝場
+            const player1 = document.getElementById('name1').textContent;
+            const player2 = document.getElementById('name2').textContent;
+            
+            playerStats[player1].appearances++;
+            playerStats[player2].appearances++;
+            
+            currentRound++;
+            updateRoundInfo();
+            
+            if (currentRound <= totalRounds) {
+                startTimer();
+                nextMatch();
+            } else {
+                endGame();
+            }
+        }
+        
+        // 下一場比賽
+        function nextMatch() {
+            // 檢查是否結束
+            if (currentRound > totalRounds) {
+                endGame();
+                return;
+            }
+            
+            // 隨機選擇2位選手
+            const index1 = Math.floor(Math.random() * players.length);
+            let index2;
+            do {
+                index2 = Math.floor(Math.random() * players.length);
+            } while (index2 === index1);
+            
+            const player1 = players[index1];
+            const player2 = players[index2];
+            
+            document.getElementById('name1').textContent = player1;
+            document.getElementById('name2').textContent = player2;
+        }
+        
+        // 選擇選手
+        function selectPlayer(num) {
+            if (gameEnded) return;
+            clearInterval(timer);
+            
+            const winner = num === 1 ? 
+                document.getElementById('name1').textContent : 
+                document.getElementById('name2').textContent;
+            
+            const loser = num === 1 ? 
+                document.getElementById('name2').textContent : 
+                document.getElementById('name1').textContent;
+            
+            // 更新選手出場次數
+            playerStats[winner].appearances++;
+            playerStats[loser].appearances++;
+            
+            // 更新勝場數
+            playerStats[winner].wins++;
+            
+            // 計算勝率
+            playerStats[winner].winRate = (playerStats[winner].wins / playerStats[winner].appearances) * 100;
+            playerStats[loser].winRate = (playerStats[loser].wins / playerStats[loser].appearances) * 100;
+            
+            currentRound++;
+            updateRoundInfo();
+            
+            if (currentRound <= totalRounds) {
+                startTimer();
+                nextMatch();
+            } else {
+                endGame();
+            }
+        }
+        
+        // 遊戲結束
+        function endGame() {
+            gameEnded = true;
+            clearInterval(timer);
+            document.getElementById('play-area').style.display = 'none';
+            document.getElementById('reset-btn').style.display = 'block';
+            
+            // 顯示排名
+            showRankings();
+        }
+        
+        // 顯示排名
+        function showRankings() {
+            const rankList = document.getElementById('rank-list');
+            rankList.innerHTML = '';
+            
+            // 準備所有選手數據並計算勝率
+            const allPlayers = players.map(player => ({
+                name: player,
+                wins: playerStats[player].wins,
+                appearances: playerStats[player].appearances,
+                winRate: playerStats[player].appearances > 0 ? 
+                    (playerStats[player].wins / playerStats[player].appearances * 100).toFixed(1) : 0
+            }));
+            
+            // 按勝率排序，然後按出場次數，最後按名字
+            allPlayers.sort((a, b) => {
+                if (b.winRate !== a.winRate) return b.winRate - a.winRate;
+                if (b.appearances !== a.appearances) return b.appearances - a.appearances;
+                return a.name.localeCompare(b.name);
+            });
+            
+            // 添加排名
+            allPlayers.forEach((player, index) => {
+                // 只顯示有出場過的選手
+                if (player.appearances > 0) {
+                    const rankItem = document.createElement('div');
+                    rankItem.className = 'rank-item';
+                    
+                    let rankText = '';
+                    if (index === 0) rankText = '👑 公主';
+                    else if (index === 1) rankText = '🥈';
+                    else if (index === 2) rankText = '🥉';
+                    else rankText = `${index + 1}`;
+                    
+                    rankItem.innerHTML = `
+                        <div class="rank-number">${rankText}</div>
+                        <div class="rank-details">
+                            <strong>${player.name}</strong>
+                            <div class="win-rate">
+                                勝率: ${player.winRate}% (${player.wins}勝/${player.appearances}場)
+                            </div>
+                        </div>
+                    `;
+                    rankList.appendChild(rankItem);
+                }
+            });
+            
+            // 顯示總統計
+            document.getElementById('final-stats').innerHTML = `
+                總回合數: ${totalRounds} | 平手次數: ${drawCount} | 已完成選擇: ${totalRounds - drawCount}
+            `;
+            
+            document.getElementById('rankings').style.display = 'block';
+        }
+        
+        // 重置遊戲
+        function resetGame() {
+            initGame();
+        }
+        
+        // 開始遊戲
+        window.onload = initGame;
+    </script>
+</body>
+</html>
