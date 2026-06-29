@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fubon Angels 隨機十人解謎</title>
+    <style>
+        :root { --fubon-blue: #003153; --fubon-gold: #C5A059; }
+        body { font-family: 'Microsoft JhengHei', sans-serif; background: #f4f7f6; display: flex; justify-content: center; padding: 10px; margin: 0; }
+        .container { width: 100%; max-width: 500px; background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        
+        #top-area { position: sticky; top: 0; background: white; padding: 10px 0; border-bottom: 2px solid #edf2f7; z-index: 10; }
+        #clue-board { background: var(--fubon-blue); color: white; padding: 15px; border-radius: 12px; font-size: 1.05rem; line-height: 1.6; text-align: center; }
+        
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
+        .card { padding: 15px; border: 1px solid #e2e8f0; border-radius: 10px; text-align: center; cursor: pointer; transition: 0.2s; font-weight: bold; background: white; }
+        .card:hover { border-color: var(--fubon-gold); background: #fffdf5; }
+        .card.wrong { opacity: 0.15; cursor: default; }
+        
+        .hint-btn { width: 100%; padding: 12px; margin-top: 15px; border: none; background: var(--fubon-gold); color: white; border-radius: 10px; cursor: pointer; font-weight: bold; }
+        #stats { font-size: 0.85rem; color: #718096; text-align: center; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="top-area">
+        <h3 style="text-align:center; margin:0 0 10px 0; color: var(--fubon-blue);">🧩 完整陣容推理賽</h3>
+        <div id="clue-board">載入中...</div>
+    </div>
+
+    <div class="grid" id="grid"></div>
+    
+    <button class="hint-btn" onclick="getExtraHint()">💡 我需要更多線索</button>
+    <div id="stats"></div>
+</div>
+
+<script>
+    const fullList = [
+        { name: "潔米", trait: "創團元老，穩定且有溫度的隊長風範。", category: "元老成員" },
+        { name: "慈妹", trait: "被譽為富邦小可愛，充滿爆發力的舞蹈與表情包。", category: "人氣成員" },
+        { name: "丹丹", trait: "轉身瞬間的魅力無人能敵，網路點閱極高。", category: "人氣成員" },
+        { name: "秀秀子", trait: "隊伍知性擔當，應援動作俐落精準。", category: "人氣成員" },
+        { name: "檸檬", trait: "球場開心果，笑容充滿感染力且電量滿格。", category: "活力成員" },
+        { name: "Jessy", trait: "擁有空靈氣質，冷豔外表下藏著甜美笑容。", category: "氣質成員" },
+        { name: "奶昔", trait: "風格清新鄰家，笑起來有溫暖人心的魔力。", category: "活力成員" },
+        { name: "維心", trait: "年輕且充滿活力，是新生代最具潛力的成員。", category: "新生代" },
+        { name: "沁沁", trait: "舞姿細膩，那雙清澈的眼睛是個人標誌。", category: "實力派" },
+        { name: "卡洛琳", trait: "擁有深邃輪廓，舞台氣場極強且動作有力。", category: "實力派" },
+        { name: "大頭", trait: "親和力點滿，在社群互動中總是非常熱情。", category: "活力成員" },
+        { name: "栗子", trait: "表情細膩多變，跳舞時肢體語言非常有靈魂。", category: "實力派" },
+        { name: "安娜", trait: "擁有溫柔眼神，舞步輕盈且氣質滿分。", category: "氣質成員" },
+        { name: "Tiffany", trait: "非常有個人風格，造型與動作都很有個性。", category: "特色成員" },
+        { name: "禾羽", trait: "眼神自信且充滿野心，常帶來表演驚喜。", category: "新生代" },
+        { name: "潔潔", trait: "清新脫俗，給人一種乾淨且舒服的感覺。", category: "氣質成員" },
+        { name: "雅惟", trait: "多才多藝，總能展現令人驚艷的舞姿。", category: "實力派" },
+        { name: "李雅英", trait: "來自韓國，修長身材與甜美外型的完美結合。", category: "外籍成員" },
+        { name: "南珉貞", trait: "來自韓國，冷豔眼神與呆萌反差感。", category: "外籍成員" },
+        { name: "李珠珢", trait: "來自韓國，近期因三振舞紅遍全台。", category: "外籍成員" },
+        { name: "李晧禎", trait: "來自韓國，釜山女神，五官精緻如畫。", category: "外籍成員" },
+        { name: "朴星垠", trait: "來自韓國，活潑個性在球場上非常顯眼。", category: "外籍成員" },
+        { name: "陳愉", trait: "穩定度極高，團隊中不可或缺的定海神針。", category: "實力派" },
+        { name: "呱呱", trait: "古靈精怪，總能帶給球迷出其不意的歡樂。", category: "活力成員" },
+        { name: "小芊", trait: "清澈眼神，純真又充滿元氣的態度。", category: "新生代" },
+        { name: "貝兒", trait: "帶著一點異國風情的優雅氣質，舞姿柔美。", category: "氣質成員" },
+        { name: "Laynee", trait: "強大舞台魅力，動作精準且力道十足。", category: "實力派" }
+    ];
+
+    let current = {}, gameData = [], startTime, wrongCount, hintLevel;
+
+    function initGame() {
+        // 隨機抽選 10 位
+        gameData = [...fullList].sort(() => 0.5 - Math.random()).slice(0, 10);
+        // 從這 10 位中選出一位目標
+        current = gameData[Math.floor(Math.random() * gameData.length)];
+        
+        startTime = new Date();
+        wrongCount = 0;
+        hintLevel = 0;
+        
+        document.getElementById('clue-board').textContent = `🔍 ${current.trait}`;
+        document.getElementById('stats').textContent = "開始計時...";
+        
+        const grid = document.getElementById('grid');
+        grid.innerHTML = '';
+        // 再次打散顯示順序
+        [...gameData].sort(() => 0.5 - Math.random()).forEach(d => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.textContent = d.name;
+            card.onclick = () => checkGuess(d.name, card);
+            grid.appendChild(card);
+        });
+    }
+
+    function checkGuess(name, card) {
+        if (name === current.name) {
+            const sec = Math.floor((new Date() - startTime) / 1000);
+            alert(`🎉 正解！就是「${name}」！\n\n錯誤次數：${wrongCount} 次\n總耗時：${sec} 秒`);
+            initGame();
+        } else {
+            wrongCount++;
+            card.classList.add('wrong');
+            document.getElementById('stats').textContent = `已嘗試錯誤：${wrongCount} 次`;
+        }
+    }
+
+    function getExtraHint() {
+        hintLevel++;
+        if (hintLevel === 1) alert(`【線索 1】名字共有 ${current.name.length} 個字。`);
+        else if (hintLevel === 2) alert(`【線索 2】她的類別是：${current.category}。`);
+        else if (hintLevel === 3) alert(`【線索 3】名字的第一個字是「${current.name[0]}」。`);
+        else alert(`【最終線索】她的特徵是：${current.trait}`);
+    }
+
+    initGame();
+</script>
+</body>
+</html>
