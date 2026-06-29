@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>Fubon Angels 27人全制霸挑戰</title>
+    <style>
+        :root { --fubon-blue: #003153; --fubon-gold: #C5A059; }
+        body { font-family: 'Microsoft JhengHei', sans-serif; background: #f4f7f6; display: flex; justify-content: center; padding: 10px; }
+        .container { width: 100%; max-width: 500px; background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        #clue-board { background: var(--fubon-blue); color: white; padding: 20px; border-radius: 12px; text-align: center; font-weight: bold; margin-bottom: 15px; font-size: 1.1rem; line-height: 1.5; }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .card { padding: 12px; border: 1px solid #ddd; border-radius: 10px; text-align: center; cursor: pointer; font-weight: bold; }
+        .card:hover { border-color: var(--fubon-gold); background: #fffdf5; }
+        .card.wrong { opacity: 0.15; cursor: default; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h3 id="round-info" style="text-align:center; color:var(--fubon-blue);">第 1 / 10 關</h3>
+    <div id="clue-board">載入中...</div>
+    <div id="grid" class="grid"></div>
+    <button style="width:100%; margin-top:15px; padding:12px; border-radius:8px; background:var(--fubon-gold); color:white; border:none; cursor:pointer;" onclick="getHint()">💡 切換提示風格</button>
+    <div id="stats" style="text-align:center; margin-top:10px;">總分：0</div>
+</div>
+
+<script>
+    const members = [
+        { name: "潔米", prof: "元老級隊長，舞步紮實沒話說。", fan: "富邦大家長，照顧後輩超暖。", funny: "隊長退休那天，富邦應援區大概會原地解散。" },
+        { name: "慈妹", prof: "招牌就是那個誇張的彈跳力。", fan: "攝影師最愛，完全不用找鏡頭。", funny: "她根本裝了勁量電池，哪天跳到飛出球場我都不意外。" },
+        { name: "丹丹", prof: "轉身那個瞬間的神級表情。", fan: "公認的流量密碼，隨便動動都能上版面。", funny: "看她跳舞會忘記比分，這就是所謂的顏值大於勝負吧。" },
+        { name: "檸檬", prof: "歌唱實力擔當，應援電量滿格。", fan: "檸魂歌姬，聽她唱歌是一種享受。", funny: "把球場當個人演唱會，隔壁球迷以為買到的是演唱會票。" },
+        { name: "李雅英", prof: "韓籍女神，那個笑容有魔力。", fan: "完全沒架子的韓國姊姊，大家都愛。", funny: "那個笑容甜到我糖尿病都要發作了，確定不是來拍韓劇的？" },
+        { name: "南珉貞", prof: "韓籍，舞台上冷豔風格很有記憶點。", fan: "台上冷都女，私下是呆萌吃貨。", funny: "看她吃播比看她應援還認真，這就是吃貨的本能嗎？" },
+        { name: "李珠珢", prof: "韓籍，三振舞的原創靈魂。", fan: "不管音樂多無聊，她跳起來就是神曲。", funny: "把對手球員的心智帶走的魔性舞者，這舞步有毒吧！" },
+        { name: "李晧禎", prof: "韓籍，五官精緻像洋娃娃。", fan: "講話軟綿綿，整個人超仙。", funny: "她一出現，球場直接變高級攝影棚，其他人都變背景板。" },
+        { name: "大頭", prof: "超愛跟觀眾互動，完全沒偶包。", fan: "球迷的麻吉，跟她聊天超輕鬆。", funny: "她根本是派來的公關經理，那招牌熱情誰逃得掉？" },
+        { name: "卡洛琳", prof: "混血輪廓，跳舞爆發力很強。", fan: "氣場超強，舞台上完全壓得住陣腳。", funny: "那跳舞的力道，我都在擔心球場地板會不會被她踩裂。" },
+        { name: "奶昔", prof: "長相親民，笑起來很有感染力。", fan: "標準鄰家妹妹，看著很舒服。", funny: "看她笑一下，加班的怨氣都沒了，這治癒效果太強。" },
+        { name: "秀秀子", prof: "舞蹈動作很乾淨，精準度高。", fan: "氣質女神，怎麼跳都不會亂。", funny: "球隊落後時，看到她冷靜的臉，突然覺得還有希望。" },
+        { name: "沁沁", prof: "眼睛圓圓的，跳舞很認真。", fan: "非常敬業，每個節拍都死守。", funny: "她盯著你跳舞時的那種壓迫感，這就是所謂的敬業嗎？" },
+        { name: "栗子", prof: "表情豐富，舞台感很強。", fan: "很有個人風格，看她跳很享受。", funny: "五官比身體還忙，整場應援臉部肌肉都沒停過。" },
+        { name: "陳愉", prof: "基本功紮實，不容易出錯。", fan: "穩定度超高，把任務交給她就對了。", funny: "根本是應援界的公務員，標準、精準、從不遲到。" },
+        { name: "呱呱", prof: "很會搞怪，球迷互動梗很多。", fan: "鬼點子製造機，球場笑聲來源。", funny: "她是去應援還是去演喜劇的？怎麼梗永遠用不完？" },
+        { name: "雅惟", prof: "舞蹈科班，肢體弧度很專業。", fan: "看她跳舞就是享受，線條超美。", funny: "把應援當成國家級舞劇跳，旁邊人瞬間顯得好業餘。" },
+        { name: "Laynee", prof: "眼神很有殺傷力，舞台支配力強。", fan: "超有個性的，氣場都在她身上。", funny: "那眼神殺得球員都不敢亂看，深怕被她瞪到三振。" },
+        { name: "安娜", prof: "舞步輕盈，充滿貴族氣質。", fan: "跟其他成員風格不太一樣，很溫潤。", funny: "跳應援的樣子，感覺下一秒要優雅地去喝下午茶。" },
+        { name: "潔潔", prof: "純淨清流，風格很舒服。", fan: "應援看著很乾淨，心靈都療癒了。", funny: "跟其他人的瘋狂比起來，她根本是球場空氣清淨機。" },
+        { name: "Tiffany", prof: "穿搭時尚，造型很大膽。", fan: "走在潮流尖端，風格超級強烈。", funny: "她那身行頭，讓我懷疑自己是不是走錯片場到時裝週。" },
+        { name: "禾羽", prof: "眼神犀利，新人中的潛力股。", fan: "很有企圖心，每次看都在進化。", funny: "那眼神犀利到，好像下一秒就要把球給抓下來一樣。" },
+        { name: "朴星垠", prof: "韓式風格流暢，熱情滿點。", fan: "笑聲很爽朗，感染力超強。", funny: "轉圈圈轉得比電風扇還久，真的不會頭暈嗎？" },
+        { name: "小芊", prof: "純真感強，很有元氣。", fan: "看到她就會心情好，純純的可愛。", funny: "那樣子太無害了，連一點歪念頭都不敢有。" },
+        { name: "貝兒", prof: "肢體動作柔美，很有藝術氣息。", fan: "異國風味濃，很有個人辨識度。", funny: "她一出場，草地瞬間變巴黎伸展台。" },
+        { name: "Jessy", prof: "空靈系代表，舞蹈行雲流水。", fan: "隊內冷豔系擔當，高顏值。", funny: "她跳起舞來，感覺身邊的空氣都變冷了，冷卻效果滿分。" },
+        { name: "維心", prof: "青春衝勁十足，舞台風格活潑。", fan: "新生代戰將，笑容超有活力。", funny: "她跳舞那股拚勁，感覺她是想把球場給跑滿才甘心。" }
+    ];
+
+    // ... (後續 JavaScript 邏輯保持不變，這份名單現在已經完整 27 人)
+    let remaining = [...members], current, round = 1, score = 0, wrong = 0, hintType = 0;
+
+    function startRound() {
+        if (round > 10) { alert(`🎉 挑戰結束！總分：${score}`); location.reload(); return; }
+        const idx = Math.floor(Math.random() * remaining.length);
+        current = remaining.splice(idx, 1)[0];
+        document.getElementById('round-info').textContent = `第 ${round} / 10 關`;
+        let opts = [current, ...members.filter(m => m.name !== current.name).sort(() => 0.5-Math.random()).slice(0, 5)];
+        opts.sort(() => 0.5-Math.random());
+        hintType = 0;
+        document.getElementById('clue-board').textContent = `🔍 ${current.prof}`;
+        const grid = document.getElementById('grid'); grid.innerHTML = '';
+        opts.forEach(o => {
+            const c = document.createElement('div'); c.className = 'card'; c.textContent = o.name;
+            c.onclick = () => {
+                if (o.name === current.name) { score += 100 - (wrong * 10); round++; startRound(); }
+                else { wrong++; c.classList.add('wrong'); }
+                document.getElementById('stats').textContent = `總分：${score}`;
+            };
+            grid.appendChild(c);
+        });
+    }
+
+    function getHint() {
+        hintType = (hintType + 1) % 3;
+        if (hintType === 0) document.getElementById('clue-board').textContent = `🔍 ${current.prof}`;
+        else if (hintType === 1) document.getElementById('clue-board').textContent = `💬 ${current.fan}`;
+        else document.getElementById('clue-board').textContent = `🤡 ${current.funny}`;
+    }
+
+    startRound();
+</script>
+</body>
+</html>
