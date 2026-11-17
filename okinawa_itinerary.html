@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>沖繩五日遊 - 行程與地圖指南</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
+        body { font-family: 'Noto Sans TC', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-sky-600 to-indigo-600 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-md mx-auto px-4 py-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold flex items-center gap-2">
+                    <i class="fa-solid fa-umbrella-beach"></i> 沖繩五日遊
+                </h1>
+                <p class="text-xs text-sky-100 mt-0.5">即時氣象與行程指南</p>
+            </div>
+            <div id="weather-badge" class="bg-white/20 px-3 py-1.5 rounded-full text-xs flex items-center gap-1.5 backdrop-blur-sm">
+                <i class="fa-solid fa-cloud-sun text-amber-300"></i>
+                <span id="current-temp">那霸 21°C 晴時多雲</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Day Selector Tabs -->
+    <nav class="bg-white shadow-sm border-b sticky top-[69px] z-40">
+        <div class="max-w-md mx-auto px-2 flex justify-between overflow-x-auto no-scrollbar py-2 gap-1">
+            <button onclick="switchTab('D1')" id="btn-D1" class="day-btn px-4 py-2 rounded-xl text-sm font-bold transition-all bg-sky-600 text-white shadow-sm shrink-0">D1</button>
+            <button onclick="switchTab('D2')" id="btn-D2" class="day-btn px-4 py-2 rounded-xl text-sm font-bold transition-all text-slate-600 hover:bg-slate-100 shrink-0">D2</button>
+            <button onclick="switchTab('D3')" id="btn-D3" class="day-btn px-4 py-2 rounded-xl text-sm font-bold transition-all text-slate-600 hover:bg-slate-100 shrink-0">D3</button>
+            <button onclick="switchTab('D4')" id="btn-D4" class="day-btn px-4 py-2 rounded-xl text-sm font-bold transition-all text-slate-600 hover:bg-slate-100 shrink-0">D4</button>
+            <button onclick="switchTab('D5')" id="btn-D5" class="day-btn px-4 py-2 rounded-xl text-sm font-bold transition-all text-slate-600 hover:bg-slate-100 shrink-0">D5</button>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="max-w-md mx-auto px-4 py-5 flex-grow w-full mb-10">
+        
+        <!-- Weather Info Box -->
+        <div class="bg-gradient-to-br from-sky-500 to-blue-600 rounded-2xl p-4 text-white shadow-md mb-6 flex items-center justify-between">
+            <div>
+                <span id="weather-date-title" class="text-xs uppercase tracking-wider text-sky-200 font-medium">Day 1 Google 天氣預報</span>
+                <h3 id="weather-condition" class="text-lg font-bold mt-0.5">晴時多雲 (21°C / 20°C)</h3>
+                <p id="weather-advice" class="text-xs text-sky-100 mt-1">氣溫舒適，降雨機率低，適合戶外活動。</p>
+            </div>
+            <div class="text-4xl">
+                <i id="weather-icon" class="fa-solid fa-cloud-sun text-amber-300"></i>
+            </div>
+        </div>
+
+        <!-- Itinerary Content Area -->
+        <div id="itinerary-content" class="space-y-4">
+            <!-- Dynamically injected by JS -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t py-4 text-center text-xs text-slate-400">
+        沖繩五日遊旅遊手冊 © 2026 行程與即時氣象指南
+    </footer>
+
+    <!-- Data & Script -->
+    <script>
+        const itineraryData = {
+            "D1": {
+                title: "第一天：那霸市區初探與國際通",
+                weather: { temp: "21°C / 20°C", condition: "晴時多雲", advice: "氣溫舒適，降雨機率低，適合戶外活動。" },
+                items: [
+                    { time: "12:30", title: "機場出境", duration: "1小時", transport: "單軌電車（那霸機場站 ➔ 美榮橋站）", note: "前往飯店", mapQuery: "那霸機場" },
+                    { time: "13:30", title: "艾斯汀納特飯店 (ESTINATE HOTEL NAHA)", duration: "30分鐘", transport: "步行（美榮橋站步行約5分鐘）", note: "寄放行李", mapQuery: "ESTINATE HOTEL NAHA" },
+                    { time: "14:00", title: "那霸市第一牧志公設市場", duration: "1小時", transport: "步行", note: "市場逛逛", mapQuery: "Makishi Public Market" },
+                    { time: "15:00", title: "和平通商店街", duration: "1小時", transport: "步行", note: "商店街逛逛", mapQuery: "Heiwa Dori Shopping Street" },
+                    { time: "16:00", title: "那霸國際通商店街", duration: "2小時", transport: "步行", note: "逛街購物", mapQuery: "Naha Kokusai Dori Shopping Street" },
+                    { time: "18:00", title: "Pork Tamago Onigiri Makishi", duration: "30分鐘", transport: "步行（牧志市場周邊）", note: "晚餐/點心：沖繩飯糰", mapQuery: "Pork Tamago Onigiri Makishi Market" },
+                    { time: "18:30", title: "福助玉子燒", duration: "30分鐘", transport: "步行（牧志市場周邊）", note: "晚餐/點心：玉子燒", mapQuery: "Fukusuke Tamago" },
+                    { time: "19:00", title: "Calbee+ 沖繩國際通店", duration: "30分鐘", transport: "步行（國際通）", note: "晚餐/點心：現炸薯條", mapQuery: "Calbee+ Kokusaidori" },
+                    { time: "19:30", title: "一蘭 那霸國際通店", duration: "1小時", transport: "步行（餐後步行回飯店）", note: "晚餐：拉麵", mapQuery: "Ichiran Naha Kokusaidori" }
+                ]
+            },
+            "D2": {
+                title: "第二天：系滿魚市場與豐崎購物",
+                weather: { temp: "23°C / 18°C", condition: "多雲", advice: "涼爽舒適，適合逛市場與商場。" },
+                items: [
+                    { time: "09:00", title: "系滿魚市場", duration: "1.5小時", transport: "公車（那霸巴士總站/旭橋搭公車）", note: "逛魚市場吃海鮮", mapQuery: "Itoman fishing cooperative Fish Center" },
+                    { time: "11:00", title: "DMM Kariyushi水族館", duration: "2小時", transport: "公車或計程車短程接駁", note: "水族館參觀", mapQuery: "DMM Kariyushi Aquarium okinawa" },
+                    { time: "13:30", title: "沖繩 ASHIBINAA Outlet", duration: "2小時", transport: "步行（水族館/iias步行約5-10分鐘）", note: "Outlet 購物", mapQuery: "Okinawa Outlet Mall Ashibinaa" },
+                    { time: "15:30", title: "iias 沖繩豐崎", duration: "2小時", transport: "步行", note: "商場逛街", mapQuery: "iias Okinawa Toyosaki" },
+                    { time: "18:30", title: "Uomaru", duration: "1.5小時", transport: "公車（豐崎回那霸市區/久茂地）", note: "晚餐：海鮮餐廳定食生魚片", mapQuery: "Uomaru Okinawa" },
+                    { time: "20:00", title: "Blue Seal 國際通店", duration: "30分鐘", transport: "步行（國際通）", note: "晚餐後甜點：冰淇淋", mapQuery: "Blue Seal Kokusaidori" },
+                    { time: "20:30", title: "Kushiyaki Can 居酒屋", duration: "1.5小時", transport: "步行（美榮橋站附近，近飯店）", note: "晚餐/消夜：居酒屋", mapQuery: "Kushiyaki Can" }
+                ]
+            },
+            "D3": {
+                title: "第三天：首里城古蹟與大型商場",
+                weather: { temp: "19°C / 16°C", condition: "多雲", advice: "氣溫微涼，戶外步行請適時添加衣物。" },
+                items: [
+                    { time: "09:00", title: "達摩寺", duration: "45分鐘", transport: "單軌電車（美榮橋站 ➔ 首里站，步行5分）", note: "參拜", mapQuery: "Sairaiin Daruma Temple" },
+                    { time: "10:00", title: "首里城", duration: "1.5小時", transport: "步行（從達摩寺步行約10-12分鐘）", note: "古蹟參觀", mapQuery: "Shuri Castle" },
+                    { time: "12:00", title: "San-A Naha Main Place", duration: "2.5小時", transport: "單軌電車（歌町站 Omoromachi）", note: "逛街、大型超市採買（可在此順便午餐）", mapQuery: "San-A Naha Main Place" },
+                    { time: "15:00", title: "PARCO CITY", duration: "3小時", transport: "公車或計程車約10-15分鐘", note: "海景商場逛街購物", mapQuery: "PARCO CITY Okinawa" },
+                    { time: "18:30", title: "抹茶カフェ SUGURI", duration: "45分鐘", transport: "公車回那霸市區/牧志", note: "傍晚點心：抹茶", mapQuery: "抹茶カフェ SUGURI" },
+                    { time: "19:30", title: "Buchi Kumojiten", duration: "1.5小時", transport: "步行（久茂地一帶）", note: "晚餐：燒肉", mapQuery: "Buchi Kumojiten" },
+                    { time: "21:00", title: "麺家 ゆきたく", duration: "1小時", transport: "步行（久茂地一帶）", note: "晚餐/消夜：豚骨拉麵", mapQuery: "麺家ゆきたく" },
+                    { time: "備選", title: "土鍋飯ぽかぽかminatogawa", duration: "1小時", transport: "公車（浦添港川外人住宅區一帶）", note: "備選美食（可視行程彈性安排）", mapQuery: "Minatogawa Stateside Town" }
+                ]
+            },
+            "D4": {
+                title: "第四天：萬座毛與古宇利島北部風光",
+                weather: { temp: "18°C / 16°C", condition: "多雲時晴", advice: "海風較大，建議攜帶防風外套。" },
+                items: [
+                    { time: "08:30", title: "萬座毛", duration: "1小時", transport: "觀光巴士／高速巴士＋路線公車", note: "海岸景觀", mapQuery: "Cape Manzamo Okinawa" },
+                    { time: "11:00", title: "古宇利島", duration: "2.5小時", transport: "觀光巴士／公車轉乘", note: "跨海大橋、海灘與午餐", mapQuery: "Kouri Island" },
+                    { time: "18:30", title: "沖繩溶岩燒牛排", duration: "1小時", transport: "巴士／觀光巴士返回那霸市區", note: "晚餐：牛排", mapQuery: "Yappari Steak Kumoji" },
+                    { time: "19:30", title: "燒肉之家和貴 國際通店", duration: "1.5小時", transport: "步行（國際通）", note: "晚餐：燒肉", mapQuery: "Yakiniku Restaurant KAZUCHAN Naha" },
+                    { time: "21:00", title: "Yakizen焼膳", duration: "1.5小時", transport: "步行（久茂地/國際通周邊）", note: "晚餐/消夜：居酒屋", mapQuery: "Yakizen Naha" }
+                ]
+            },
+            "D5": {
+                title: "第五天：返程與伴手禮採買",
+                weather: { temp: "20°C / 15°C", condition: "多雲時晴", advice: "氣候舒適，愉快採買伴手禮準備返台。" },
+                items: [
+                    { time: "彈性", title: "最後採買 / 前往機場", duration: "-", transport: "單軌電車 / 計程車", note: "採買伴手禮並前往那霸機場準備返台", mapQuery: "Naha Airport" }
+                ]
+            }
+        };
+
+        function switchTab(dayKey) {
+            // Update buttons
+            document.querySelectorAll('.day-btn').forEach(btn => {
+                btn.classList.remove('bg-sky-600', 'text-white', 'shadow-sm');
+                btn.classList.add('text-slate-600', 'hover:bg-slate-100');
+            });
+            const activeBtn = document.getElementById(`btn-${dayKey}`);
+            activeBtn.classList.remove('text-slate-600', 'hover:bg-slate-100');
+            activeBtn.classList.add('bg-sky-600', 'text-white', 'shadow-sm');
+
+            // Update Weather Box
+            const data = itineraryData[dayKey];
+            document.getElementById('weather-date-title').innerText = `${dayKey} Google 天氣預報`;
+            document.getElementById('weather-condition').innerText = `${data.weather.condition} (${data.weather.temp})`;
+            document.getElementById('weather-advice').innerText = data.weather.advice;
+            document.getElementById('current-temp').innerText = `那霸 ${data.weather.temp.split('/')[0].trim()} ${data.weather.condition}`;
+
+            // Render Itinerary Items
+            const container = document.getElementById('itinerary-content');
+            let html = `<div class="mb-3 px-1"><h2 class="text-base font-bold text-slate-700">${data.title}</h2></div>`;
+            
+            data.items.forEach((item, index) => {
+                html += `
+                    <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 flex gap-3.5 items-start relative overflow-hidden">
+                        <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-sky-500"></div>
+                        <div class="bg-sky-50 text-sky-700 font-bold px-2.5 py-1.5 rounded-xl text-xs shrink-0 text-center min-w-[55px]">
+                            ${item.time}
+                        </div>
+                        <div class="flex-grow">
+                            <div class="flex justify-between items-start gap-2">
+                                <h3 class="font-bold text-slate-800 text-sm leading-snug">${item.title}</h3>
+                                <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full shrink-0">
+                                    <i class="fa-regular fa-clock text-[10px] mr-0.5"></i>${item.duration}
+                                </span>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-1 flex items-center gap-1.5">
+                                <i class="fa-solid fa-train-subway text-sky-500 text-xs"></i> ${item.transport}
+                            </p>
+                            ${item.note ? `<p class="text-xs text-amber-700 bg-amber-50 px-2 py-1 rounded-lg mt-2 inline-block">💡 ${item.note}</p>` : ''}
+                            <div class="mt-2 pt-2 border-t border-slate-100 flex justify-end">
+                                <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.mapQuery)}" target="_blank" class="text-xs text-sky-600 font-medium hover:text-sky-700 flex items-center gap-1">
+                                    <i class="fa-solid fa-map-location-dot"></i> Google 地圖導航
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // Initialize on load
+        window.onload = () => {
+            switchTab('D1');
+        };
+    </script>
+</body>
+</html>
