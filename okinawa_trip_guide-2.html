@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#123b3a"><meta name="description" content="沖繩五日遊互動行程、天氣、交通轉乘與旅遊提醒">
+<title>沖繩五日遊｜旅程指南</title>
+<style>
+:root{--ink:#173331;--muted:#6c807b;--paper:#f5f6f1;--card:#fff;--green:#164e48;--mint:#dcece5;--orange:#e58a54;--line:#e5e9e2;--shadow:0 12px 34px #17333112}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;line-height:1.55}
+header{background:linear-gradient(135deg,#123b3a,#28665c);color:#fff;padding:28px 20px 25px;border-radius:0 0 28px 28px}
+.wrap{max-width:880px;margin:auto;padding:0 16px}header .eyebrow{font-size:12px;letter-spacing:.16em;opacity:.75}h1{font-size:28px;line-height:1.2;margin:8px 0}header p{margin:8px 0 0;color:#d8e9e2;font-size:14px}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.pill{background:#ffffff20;border:1px solid #ffffff30;border-radius:99px;padding:6px 11px;font-size:12px}
+main{padding:18px 0 100px}.section{margin:18px 0}.section h2{font-size:19px;margin:0 0 12px}.sub{color:var(--muted);font-size:13px}
+.weather{background:linear-gradient(120deg,#e2f0e9,#fff);border:1px solid #d7e7dd;border-radius:20px;padding:17px;box-shadow:var(--shadow)}
+.weatherTop{display:flex;justify-content:space-between;gap:12px;align-items:center}.weatherTop strong{font-size:18px}.temp{font-size:32px;font-weight:750;letter-spacing:-1px}.weatherGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.wxStat{background:#ffffffc9;border-radius:12px;padding:9px}.wxStat small{display:block;color:var(--muted);font-size:11px}.wxStat b{font-size:14px}.wxDays{display:flex;gap:8px;overflow-x:auto;margin-top:12px}.wxDay{min-width:76px;background:#fff;border-radius:12px;padding:9px;text-align:center;font-size:12px}.wxDay b{display:block;font-size:15px}.notice{font-size:12px;color:#657a72;margin-top:10px}
+.tabs{display:flex;gap:7px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}.tab{white-space:nowrap;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:99px;padding:9px 13px;font-weight:650;font-size:13px}.tab.active{background:var(--green);color:#fff;border-color:var(--green)}
+.dayhead{display:flex;justify-content:space-between;align-items:center;margin:12px 0}.dayhead h3{margin:0;font-size:20px}.progress{font-size:12px;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px;margin:10px 0;box-shadow:var(--shadow)}
+.item{display:grid;grid-template-columns:58px 1fr;gap:12px}.time{font-size:13px;font-weight:750;color:var(--orange);padding-top:2px}.item h4{margin:0 0 4px;font-size:16px}.item p{margin:4px 0;color:var(--muted);font-size:13px}.meta{display:flex;gap:6px;flex-wrap:wrap;margin:7px 0}.tag{font-size:11px;background:#eef4ef;border-radius:99px;padding:4px 8px;color:#45645a}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.link{display:inline-block;text-decoration:none;color:var(--green);font-size:12px;font-weight:700;border:1px solid #d9e5dd;border-radius:9px;padding:7px 10px}.check{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);margin-top:10px}.check input{width:18px;height:18px;accent-color:var(--green)}
+.panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;margin:10px 0}.panel h3{margin:0 0 9px;font-size:16px}.step{display:flex;gap:11px;padding:9px 0;border-bottom:1px dashed var(--line)}.step:last-child{border:0}.num{width:25px;height:25px;flex:0 0 25px;border-radius:50%;background:var(--mint);color:var(--green);font-weight:800;text-align:center;font-size:12px;line-height:25px}.step b{font-size:13px}.step p{margin:2px 0;color:var(--muted);font-size:12px}
+.warning{border-left:4px solid var(--orange);background:#fff7ef;padding:12px;border-radius:0 12px 12px 0;font-size:13px;margin:10px 0}.sources a{display:block;color:var(--green);font-size:12px;margin:7px 0;overflow-wrap:anywhere}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#ffffffed;backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom));display:flex;justify-content:center;gap:10px;z-index:5}.bottom a,.bottom button{border:0;background:var(--green);color:#fff;border-radius:12px;padding:10px 14px;text-decoration:none;font-size:13px;font-weight:700}
+.hidden{display:none!important}button{font:inherit;cursor:pointer}
+@media(min-width:700px){header{padding:38px 24px}.wrap{padding:0 22px}h1{font-size:34px}.cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}.cards .card{margin:0}.weatherGrid{max-width:500px}}
+</style></head>
+<body>
+<header><div class="wrap"><div class="eyebrow">OKINAWA · TRAVEL JOURNAL</div><h1>沖繩五日遊</h1><p>行程、天氣與交通資訊。</p><div class="pills"><span class="pill">12/7 – 12/11（年份暫以 2026 推定）</span><span class="pill">住宿｜ESTINATE HOTEL NAHA</span><span class="pill">時區｜日本 UTC+9</span></div></div></header>
+<main class="wrap">
+<section class="section"><h2>那霸天氣</h2><div class="weather">
+<div class="weatherTop"><div><strong>沖繩・那霸</strong><div class="sub" id="wxDesc">正在讀取天氣…</div></div><div class="temp" id="wxTemp">--°</div></div>
+<div class="weatherGrid"><div class="wxStat"><small>體感 / 溫度範圍</small><b id="wxRange">--</b></div><div class="wxStat"><small>降雨機率</small><b id="wxRain">--</b></div><div class="wxStat"><small>風速</small><b id="wxWind">--</b></div></div>
+<div class="wxDays" id="wxDays"></div><div class="notice" id="wxNote">天氣資料由 Open-Meteo 提供；行程日期超出預報範圍時，會在接近出發日後自動顯示。出發前仍請再確認官方預報。</div>
+</div></section>
+<section class="section"><h2>五日行程</h2><div class="tabs" id="tabs"></div><div class="dayhead"><h3 id="dayTitle"></h3><span class="progress" id="progress"></span></div><div id="itinerary"></div></section>
+<section class="section"><h2>交通轉乘攻略</h2><p class="sub">依 Excel 已填寫的交通資訊補充；未提供的班次、接駁時間不臆測，請以當日官方資訊為準。</p>
+<div class="panel"><h3>Day 1｜那霸機場 → 飯店</h3><div class="step"><span class="num">1</span><div><b>機場跟隨「ゆいレール / Yui Rail」指標</b><p>由航廈連通通道前往 2 樓單軌電車站，購票或使用適用的 IC 卡。</p></div></div><div class="step"><span class="num">2</span><div><b>搭往 Tedako-Uranishi 方向</b><p>在 Miebashi（美榮橋）站下車；機場站至美榮橋為同一條線，不需轉乘。</p></div></div><div class="step"><span class="num">3</span><div><b>步行至 ESTINATE HOTEL NAHA</b><p>飯店官方資訊標示距美榮橋站步行約 5 分鐘。出站後以 Google Maps 步行導航為準。</p></div></div><div class="actions"><a class="link" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=Naha+Airport+Station&destination=ESTINATE+HOTEL+NAHA&travelmode=transit">開啟大眾運輸路線</a><a class="link" target="_blank" href="https://www.yui-rail.co.jp/">單軌官方網站</a></div></div>
+<div class="panel"><h3>Day 2｜系滿魚市場・ASHIBINAA・iias・水族館</h3><div class="step"><span class="num">1</span><div><b>先確認魚市場的正確下車點</b><p>表格記載 TK02。TK02（Umikaji Liner）會停靠道之驛糸滿、ASHIBINAA、iias；魚市場與「道之驛糸滿」並非表格中明確寫出的同一站名，請出發前用地圖確認魚市場入口與步行距離，勿直接把 TK02 當成魚市場門口站。</p></div></div><div class="step"><span class="num">2</span><div><b>道之驛糸滿 → ASHIBINAA</b><p>可查 TK02 班次與站牌方向；上車前確認車頭顯示方向。到「Okinawa Outlet Mall ASHIBINAA」下車。</p></div></div><div class="step"><span class="num">3</span><div><b>ASHIBINAA → iias / DMM Kariyushi Aquarium</b><p>TK02 路線有停 iias Okinawa Toyosaki；也可查詢商場間接駁。曾公布的免費接駁僅限週末、國定假日，時刻可能變動，務必確認當期公告。</p></div></div><div class="step"><span class="num">4</span><div><b>回那霸</b><p>從 iias 站搭 TK02 往 Kokusai-dori-iriguchi（國際通入口）方向；確認班次及末班車，不要只看去程時刻。</p></div></div><div class="warning">注意：TK02 是公車，不是單軌。上車時依車內規定抽整理券或感應支付，下車前準備車資／確認可用支付方式。時刻表可能調整。</div><div class="actions"><a class="link" target="_blank" href="https://www.tokyobus.jp/okinawa/">東京巴士官方資訊</a><a class="link" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=Itoman+Fish+Center&destination=Okinawa+Outlet+Mall+Ashibinaa&travelmode=transit">魚市場 → Outlet 路線</a><a class="link" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=Okinawa+Outlet+Mall+Ashibinaa&destination=iias+Okinawa+Toyosaki&travelmode=transit">Outlet → iias 路線</a></div></div>
+<div class="panel"><h3>Day 3｜首里・新都心・PARCO CITY</h3><div class="step"><span class="num">1</span><div><b>達摩寺／首里城區域</b><p>表格寫「首里」但沒有列出寺院到首里城的交通方式。建議先用步行導航確認寺院位置、坡度與入口；首里城周邊有上坡路段，預留步行時間。</p></div></div><div class="step"><span class="num">2</span><div><b>首里站 → Omoromachi（歌町）</b><p>回到 Yui Rail 首里站，搭往那霸機場方向，在 Omoromachi 站下車；San-A Naha Main Place 位於新都心區域。</p></div></div><div class="step"><span class="num">3</span><div><b>新都心 → PARCO CITY</b><p>表格沒有指定巴士路線或站牌。請在出發前以當日 Google Maps 公車路線確認，或評估計程車；不要把單軌站當成 PARCO CITY 站點。</p></div></div><div class="actions"><a class="link" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=Shuri+Station&destination=Omoromachi+Station&travelmode=transit">首里 → 歌町單軌</a><a class="link" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=San-A+Naha+Main+Place&destination=PARCO+CITY+Okinawa&travelmode=transit">新都心 → PARCO CITY</a><a class="link" target="_blank" href="https://www.yui-rail.co.jp/">單軌時刻／票價</a></div></div>
+<div class="panel"><h3>Day 4｜萬座毛・古宇利島一日遊</h3><p class="sub">Excel 只註明「一日遊」，沒有旅行社、集合地點、出發時間或回程時間，因此無法確認接駁方式。</p><div class="warning">請先核對訂單：集合地點與時間、是否含萬座毛入場費、古宇利島停留時間、午餐安排、雨天／海況取消規則、回程下車點。若是自助行，需另行規劃租車或長途巴士接駁；兩景點之間不宜假設有直達公車。</div><div class="actions"><a class="link" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=Naha&destination=Kouri+Island&waypoints=Manzamo&travelmode=driving">查看自駕路線</a></div></div>
+<div class="panel"><h3>Day 5｜國際通最後補貨</h3><p>行程表沒有填寫交通方式與時間。若仍住 ESTINATE HOTEL NAHA，可步行或依當下位置使用地圖導航；前往機場請預留購物、退稅、行李整理及交通緩衝時間。</p><div class="actions"><a class="link" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=ESTINATE+HOTEL+NAHA&destination=Naha+Kokusai+Dori&travelmode=walking">飯店 → 國際通步行</a><a class="link" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=Naha+Kokusai+Dori&destination=Naha+Airport&travelmode=transit">國際通 → 機場</a></div></div>
+</section>
+<section class="section"><h2>出發前注意事項</h2><div class="panel">
+<div class="step"><span class="num">✓</span><div><b>交通支付</b><p>確認單軌、公車各自接受的 IC 卡／信用卡感應方式；不同營運商與路線規則可能不同，備少量日圓現金。</p></div></div>
+<div class="step"><span class="num">✓</span><div><b>公車搭乘</b><p>先確認方向、站名日文拼法與末班車。日本公車可能採後門上車、前門下車或依路線而異，依車上指示操作。</p></div></div>
+<div class="step"><span class="num">✓</span><div><b>冬季海邊與北部行程</b><p>12 月海風較強，帶薄外套／防風層；萬座毛、古宇利島戶外停留要留意風雨與海況。</p></div></div>
+<div class="step"><span class="num">✓</span><div><b>景點營業與餐廳</b><p>市場、餐廳及商店可能有公休日、售完或臨時調整；當天出發前再次確認營業時間。</p></div></div>
+<div class="step"><span class="num">✓</span><div><b>行程彈性</b><p>目前 Excel 多數景點沒有停留時間，Day 2 南部多點移動、Day 4 一日遊建議保留緩衝，不要排得太緊。</p></div></div>
+</div></section>
+<section class="section"><h2>資料來源與待確認</h2><div class="panel sources">
+<a href="https://www.livelyhotels.com/en/estinate/access/" target="_blank">ESTINATE HOTEL NAHA 官方交通資訊</a>
+<a href="https://www.yui-rail.co.jp/" target="_blank">沖繩都市單軌電車 Yui Rail 官方網站</a>
+<a href="https://www.naha-airport.co.jp/en/access/bus/" target="_blank">那霸機場巴士乘車資訊</a>
+<a href="https://www.tokyobus.jp/okinawa/" target="_blank">東京巴士 Okinawa（TK02 等路線）</a>
+<a href="https://toyosaki.iias.jp/" target="_blank">iias Okinawa Toyosaki 官方網站</a>
+<a href="https://www.kotsu-okinawa.org/en/time/95_189_tk/up2.html" target="_blank">沖繩巴士路線／時刻資料（95、189、TK 系列）</a>
+<p class="notice">原始 Excel 未提供：航班日期與年份、各景點停留時間、Day 4 一日遊訂單／集合資訊、Day 5 回程航班、部分站點的確切上下車站。網站已標示需確認處，不會自行編造班次。</p>
+</div></section>
+</main>
+<div class="bottom"><a href="#tabs">回到每日行程</a><button onclick="window.scrollTo({top:0,behavior:'smooth'})">回到頂部 ↑</button></div>
+<script>
+const days=[
+{label:"12/7",name:"第一天｜抵達那霸・國際通",items:[
+["12:30","那霸機場出境","約 1 小時","單軌電車","依入境流程調整。"],
+["下午","ESTINATE HOTEL NAHA","寄放行李","單軌至美榮橋站","先寄放行李。"],
+["下午","PARCO CITY","未填","交通待確認","購物。"],
+["下午","第一牧志公設市場／和平通／國際通","未填","步行","逛市場與商店街。"],
+["晚餐","Uomaru","未填","步行","海鮮定食、生魚片。"],
+["晚餐","Kushiyaki Can 居酒屋","未填","步行","居酒屋。"],
+["晚餐","一蘭 那霸國際通店","未填","步行","拉麵。"],
+["晚餐","沖繩溶岩燒牛排（Yappari Steak Kumoji）","未填","步行","牛排。"]]},
+{label:"12/8",name:"第二天｜系滿・豐崎海濱購物",items:[
+["09:00","系滿魚市場","未填","TK02（表格記載）","確認魚市場入口與下車站。"],
+["上午","糸滿漁民食堂","未填","步行／依現場位置","確認營業時間。"],
+["下午","沖繩 ASHIBINAA Outlet","未填","TK02","依當日站牌資訊。"],
+["下午","iias 沖繩豐崎","未填","TK02／接駁待確認","商場購物。"],
+["下午","DMM Kariyushi 水族館","未填","iias 商場","確認票券與入場時段。"],
+["晚餐／點心","Blue Seal 國際通店","未填","交通待確認","冰淇淋。"],
+["晚餐／點心","Pork Tamago Onigiri Makishi Market","未填","交通待確認","沖繩飯糰。"],
+["晚餐／點心","福助玉子燒","未填","交通待確認","玉子燒。"]]},
+{label:"12/9",name:"第三天｜首里・新都心・浦添",items:[
+["09:00","達摩寺（Sairaiin）","未填","首里區域","確認寺院入口位置。"],
+["上午","首里城","未填","單軌＋步行／巴士","留意上坡路段。"],
+["下午","San-A Naha Main Place","未填","單軌至 Omoromachi","新都心購物。"],
+["下午","PARCO CITY","未填","公車／計程車待確認","依當日導航。"],
+["晚餐／點心","Calbee+ 沖繩國際通店","未填","交通待確認","現炸薯條。"],
+["晚餐","麺家 ゆきたく","未填","交通待確認","豚骨拉麵。"],
+["晚餐","Yakizen焼膳","未填","交通待確認","居酒屋。"]]},
+{label:"12/10",name:"第四天｜萬座毛・古宇利島",items:[
+["08:30","萬座毛","未填","一日遊專車","依旅行社行程。"],
+["白天","古宇利島","未填","一日遊專車","留意海邊風況。"],
+["全天","北部一日遊","未填","觀光巴士／專車","確認集合與回程資訊。"],
+["晚餐／點心","抹茶カフェ SUGURI","未填","交通待確認","抹茶。"],
+["晚餐","Buchi Kumojiten","未填","交通待確認","燒肉。"],
+["晚餐","燒肉之家和貴 那霸國際通店","未填","交通待確認","燒肉。"]]},
+{label:"12/11",name:"第五天｜國際通最後補貨・搭機返台",items:[
+["上午","國際通最後補貨","未填","步行／單軌","採買後前往那霸機場搭機返台；預留交通與登機時間。"]]}
+];
+let current=0;
+const tabs=document.getElementById('tabs'),it=document.getElementById('itinerary');
+function draw(){tabs.innerHTML=days.map((d,i)=>`<button class="tab ${i===current?'active':''}" onclick="current=${i};draw()">${d.label}・D${i+1}</button>`).join('');
+const d=days[current];document.getElementById('dayTitle').textContent=d.name;
+const done=JSON.parse(localStorage.getItem('okinawaDone')||'{}');
+it.innerHTML='<div class="cards">'+d.items.map((x,i)=>{let id=current+'-'+i;return `<div class="card"><div class="item"><div class="time">${x[0]}</div><div><h4>${x[1]}</h4><div class="meta"><span class="tag">停留：${x[2]}</span><span class="tag">交通：${x[3]}</span></div><p>${x[4]}</p><div class="actions"><a class="link" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(x[1]+' Okinawa')}">地圖導航 ↗</a></div><label class="check"><input type="checkbox" ${done[id]?'checked':''} onchange="mark('${id}',this.checked)"> 已完成／已確認</label></div></div></div>`}).join('')+'</div>';
+let count=d.items.filter((x,i)=>done[current+'-'+i]).length;document.getElementById('progress').textContent=`完成 ${count} / ${d.items.length}`;
+}
+function mark(id,v){let done=JSON.parse(localStorage.getItem('okinawaDone')||'{}');done[id]=v;localStorage.setItem('okinawaDone',JSON.stringify(done));draw()}
+draw();
+const code={0:"晴",1:"多雲",2:"局部多雲",3:"陰",45:"霧",48:"霧",51:"毛毛雨",53:"毛毛雨",55:"毛毛雨",61:"小雨",63:"雨",65:"大雨",71:"小雪",80:"陣雨",81:"陣雨",82:"大陣雨",95:"雷雨",96:"雷雨",99:"雷雨"};
+async function weather(){try{let u='https://api.open-meteo.com/v1/forecast?latitude=26.2124&longitude=127.6809&current=temperature_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTokyo&forecast_days=16';
+let r=await fetch(u);if(!r.ok)throw Error('weather');let j=await r.json(),c=j.current,d=j.daily;
+document.getElementById('wxTemp').textContent=Math.round(c.temperature_2m)+'°';document.getElementById('wxDesc').textContent=(code[c.weather_code]||'天氣')+'・目前體感 '+Math.round(c.apparent_temperature)+'°C';
+document.getElementById('wxRange').textContent=Math.round(c.apparent_temperature)+'°C';document.getElementById('wxRain').textContent=Math.round(c.precipitation||0)+' mm（目前）';document.getElementById('wxWind').textContent=Math.round(c.wind_speed_10m)+' km/h';
+let dateFrom='2026-12-07',dateTo='2026-12-11',idx=d.time.findIndex(x=>x===dateFrom);
+let html=d.time.slice(0,7).map((t,i)=>`<div class="wxDay">${t.slice(5).replace('-','/')}<b>${code[d.weather_code[i]]||'—'}</b>${Math.round(d.temperature_2m_min[i])}–${Math.round(d.temperature_2m_max[i])}°<br>雨 ${d.precipitation_probability_max[i]??'—'}%</div>`).join('');
+document.getElementById('wxDays').innerHTML=html;
+if(idx<0)document.getElementById('wxNote').textContent='目前預報只涵蓋未來 16 天，尚未涵蓋 12/7–12/11；接近出發日後重新開啟此頁即可自動更新。現在顯示的是那霸近期天氣，不能當作旅遊日預報。';
+else{let trip=d.time.slice(idx,idx+5).map((t,k)=>`${t.slice(5)} ${code[d.weather_code[idx+k]]||''} ${Math.round(d.temperature_2m_min[idx+k])}–${Math.round(d.temperature_2m_max[idx+k])}° 雨${d.precipitation_probability_max[idx+k]??'—'}%`);document.getElementById('wxNote').textContent='旅遊日期預報：'+trip.join('｜')}
+}catch(e){document.getElementById('wxDesc').textContent='天氣暫時無法載入';document.getElementById('wxNote').textContent='請確認網路連線，或直接查看日本氣象廳預報。';}}
+weather();
+</script></body></html>
